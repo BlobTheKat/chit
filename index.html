@@ -1,0 +1,126 @@
+<!--
+	Template and source code property of BlobKat#1337
+	Give credit when applicable
+	Contact: blob.kat@hotmail.com
+-->
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+	<meta charset="UTF-8">
+	<noscript><meta http-equiv="refresh" content="0; URL=/crash.html" /></noscript>
+	<link id="pload" rel="preload" as="script" href="./lib.js" crossorigin="anonymous">
+	<link id="fav" rel="icon" href="./img/iconwhite.png">
+	<script>const loaded=()=>(--loaded.l||loaded.cb());loaded.l=2;loaded.cb=()=>{};{
+const nullarr = () => [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+//implement rangetable
+loaded.root = nullarr()
+loaded.ws = null
+loaded.dat = null
+localStorage.err = ''
+if(!localStorage.token)location = '/signup'
+function auth(){
+	if(!localStorage.token)return
+	const ip = localStorage.authip
+	const ws = loaded.ws = new WebSocket(`ws://${ip}/${encodeURIComponent(localStorage.id)}/${encodeURIComponent(localStorage.token)}/auth`)
+	let opened = false
+	ws.onmessage=({data})=>{
+		if(typeof data != 'string')return
+		if(!opened){
+			loaded.dat = JSON.parse(data)
+			if(typeof loaded.dat == 'string')localStorage.err = loaded.dat,location='/signup',ws.onclose=null
+			loaded()
+			return opened = true
+		}
+	}
+	ws.onclose=e=>{
+		if(e.code == 1006)localStorage.authip = localStorage.id = localStorage.token = ''
+		location=opened?'':'/crash.html?'+encodeURIComponent('Could not connect to auth server ('+e.code+')')
+	}
+}
+
+function loadguilds(){
+	const txt = localStorage.guildnodes
+	for(let i of txt.split('\n')){
+		const [range, ip] = i.trim().split(' ')
+		let [bit, shift] = range.split('/')
+		shift -= 0
+		bit = parseInt(bit, 16)
+		let node = loaded.root
+		while(shift > 4){
+			node = node[bit >>> 28] || (node[bit >>> 28] = nullarr())
+			bit <<= 4
+			shift -= 4
+		}
+		bit >>>= 28
+		for(let i = bit; i < bit + (16 >> shift); i++) node[i] = ip
+	}
+	loaded()
+}
+}
+let darkmode
+const ch = (e) => (darkmode=e.matches,globalThis.me&&(me.dark=darkmode),fav.href='./img/icon'+(e.matches?'white':'black')+'.png',e)
+ch(matchMedia('(prefers-color-scheme: dark)')).addEventListener('change',ch)
+const crcTable = Array.from({length:256},(_,n) => {let c = n;for(let k = 0; k < 8; k++) c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));return c})
+function crc32(str){
+	let crc = -1, len = str.length, i = 0
+	while(i < len)crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i++)) & 0xFF]
+	return ~crc
+}
+const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missing critical file');
+((s,{aver, gver}) => {
+	const crc = crc32(s.id || (s.id = '@blobkat'))
+	if(s.aver == aver && s.authip)auth();else fetch('authservers.txt').then(a=>a.text()).then(a=>{
+		let ip = null
+		for(let t of a.split('\n')){
+			let [h,a] = t.trim().split(' ')
+			;[t,h] = h.split('/');t=parseInt(t, 16)
+			if((crc >>> 32-h) == (t >>> 32-h)){ip = a;break}
+		}
+		if(!ip)return location='/crash.html?'+encodeURIComponent('Auth server missing')
+		s.authip = ip
+		s.aver = aver
+		auth()
+	}).catch(missingfilecrash)
+	if(s.gver == gver && s.guildnodes)loadguilds();else fetch('guildservers.txt').then(a=>a.text()).then(a=>{
+		s.guildnodes = a
+		loadguilds()
+	}).catch(missingfilecrash)
+})(localStorage,{aver:'2',gver:'2'})
+	</script>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		.down,.left,.up,.right{display:flex}
+		div{position:relative}
+		.down{ flex-direction: column }
+		.left{ flex-direction: row-reverse }
+		.up{ flex-direction: column-reverse }
+		.right{ flex-direction: row }
+		.center{ justify-content: center }
+		.end{ justify-content: flex-end }
+		.start{ justify-content: flex-start }
+		.items\3astretch{ align-items: stretch }
+		.items\3a center{ align-items: center }
+		html, body, #app{ overflow: hidden; overscroll-behavior: none; height: 100%; user-select: none; -webkit-user-select: none; line-height: 1.4;margin:0}
+		html{font-size: 16px; font-family: Arial;}
+		spacer{visibility: hidden}
+		a{color:unset;cursor: pointer}
+		img{flex-shrink: 0;}
+		span{white-space: pre;text-overflow: ellipsis;overflow: hidden;}
+		sel{user-select: text}
+		input,textarea{background: unset;color:unset;border:unset;outline:unset;resize:none;font:unset;padding:unset}
+		::placeholder{color:inherit;opacity: 0.4}
+		p{margin:unset;white-space: pre-wrap;}
+		::-webkit-scrollbar-thumb, ::scrollbar-thumb{background:#0008;border-radius:20px;position: absolute;background-clip: content-box;border: 2px transparent solid;width:10px}
+		::-webkit-scrollbar, ::scrollbar{background: transparent}
+		::selection{background:var(--col2);}
+		iframe{border:none}
+		input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+	input[type=number]{-moz-appearance: textfield}
+	</style><style>*{box-sizing: border-box;touch-action: none;overflow: visible;min-width: 0}.up > *, .down > *{flex-shrink: 0}</style>
+</head>
+<body>
+	<script src="lib.js" type="module"></script>
+	<script src="index.js" type="module"></script>
+</body>
+</html>

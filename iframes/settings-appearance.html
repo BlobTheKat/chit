@@ -1,0 +1,139 @@
+<head>
+	<style>
+		body{
+			display: flex;
+			flex-direction: column;
+			padding: 0 40px 40px 40px;
+		}
+		#theme{
+			box-shadow: -2px 2px 0 var(--col);
+			width: 64px;
+			height: 64px;
+			cursor: pointer;
+		}
+		#dark, #light{
+			flex-grow: 1;
+			height: 120px;
+			background: #191919;
+			border: 3px #333 solid;
+			cursor: pointer;
+			padding: 15px 10px;
+			color: white;
+			white-space: nowrap;
+			min-width: 0;
+			overflow: hidden;
+		}
+		#light{
+			background: #ccc;
+			border: 3px #ccc solid;
+			color: black;
+		}
+		.sel{
+			outline: 3px #25E solid;
+		}
+		#a{
+			display: flex;
+			gap: 40px;
+			font-family: ubuntu-thin;
+		}
+		.id3{color:#E52}
+		#id1,#id2,.id3{font-family: ubuntu}
+		h2{
+			margin: 40px 0 30px 0;
+		}
+		#images{
+			display: flex;
+			gap: 30px;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		#images img{
+			flex-basis: 200px;
+			flex-grow: 1;
+			height: 150px;
+			border: 4px var(--col) solid;
+			object-fit: cover;
+			max-width: 300px;
+			cursor: pointer;
+			min-width: 0;
+		}
+		#images div{
+			flex-basis: 200px;
+			flex-grow: 1;
+			height: 150px;
+			border: 4px var(--col) solid;
+			max-width: 300px;
+			cursor: pointer;
+			background: var(--bg);
+			filter: contrast(0.8);
+		}
+		#seltheme{
+			outline: 4px #25E solid;
+		}
+	</style>
+</head>
+<body>
+	<h2>Theme:</h2>
+	<div id="a">
+		<div id="light" onclick="me.dark = false">
+			<div id="id1"></div>
+			omae wa mou shindeiru
+			<div class="id3">@blobkat</div>
+			Nani?!
+		</div>
+		<div id="dark" onclick="me.dark = true">
+			<div id="id2"></div>
+			omae wa mou shindeiru
+			<div class="id3">@blobkat</div>
+			Nani?!
+		</div>
+	</div>
+	<h2>Image:</h2>
+	<div id="images" onclick="me.theme = (event.target.getAttribute('src') || '.'+me.theme).slice(1)">
+		<div src='.' id="seltheme"></div>
+		<img src='../img/grey.png' />
+		<img src='../img/creo0.png' />
+		<img src='../img/creo1.png' />
+		<img src='../img/creo2.png' />
+		<img src='../img/creo3.png' />
+		<img src='../img/creo4.png' />
+		<img src='../img/creo5.png' />
+		<img src='../img/creo6.png' />
+		<img src='../img/creo7.png' />
+		<img src='../img/nature0.jpg' />
+		<img src='../img/nature1.jpg' />
+		<img src='../img/nature2.jpg' />
+		<img src='../img/nature3.jpg' />
+		<img src='../img/nature4.jpg' />
+		<img src='../img/nature5.jpg' />
+		<img src='../img/nature6.jpg' />
+		<img src='../img/nature7.jpg' />
+	</div>
+</body>
+<script>
+	String.prototype.hashCode = function(hash = 604537145){
+		for (let i = this.length; i--;){
+			hash ^= this.charCodeAt(i)
+			hash ^= hash << 7
+			hash ^= hash >> 5
+		}
+		return hash
+	}
+	function loaded(){
+		id1.textContent = id2.textContent = me.id
+		const hashcode = me.id.hashCode() & 7
+		id2.style.color = ['#fec', '#fce', '#efc', '#cef', '#ecf', '#cee', '#eec', '#ccc'][hashcode]
+		id1.style.color = ['#630', '#603', '#360', '#036', '#306', '#033', '#330', '#333'][hashcode]
+	}
+	function themechange(){
+		light.className = dark.className = ''
+		if(me.dark)dark.className = 'sel'
+		else light.className = 'sel'
+		light.style.background = me.theme ? `linear-gradient(#fff4, #fff4), url(../${me.theme}) center/100vmax` : '#ccc'
+		dark.style.background = me.theme ? `linear-gradient(#0004, #0004), url(../${me.theme}) center/100vmax` : '#191919'
+		console.log()
+		const e = images.querySelector('[src=".'+me.theme+'"]') || images.firstElementChild
+		seltheme.id = ''
+		e.id = 'seltheme'
+	}
+</script>

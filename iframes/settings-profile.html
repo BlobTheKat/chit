@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<head>
+	<style>
+		body{
+			display: flex;
+			flex-direction: column;
+			padding: 40px;
+			gap: 40px;
+			max-width: 740px;
+			font-family: ubuntu-thin;
+		}
+		b, h1{
+			font-family: ubuntu;
+		}
+		#img{
+			box-shadow: -2px 2px 0 var(--col);
+			width: 64px;
+			height: 64px;
+			cursor: pointer;
+			image-rendering: pixelated;
+			position: relative;
+			display: inline-block;
+		}
+		#id{
+			font-family: ubuntu;
+			line-height: 64px;
+			vertical-align: top;
+			display: inline-block;
+			margin-left: 16px;
+			font-size: 20px;
+			cursor: not-allowed;
+		}
+		#img::before{
+			position: absolute;
+			bottom: 2px;
+			right: 1px;
+			display: block;
+			content: "+";
+			line-height: 15px;
+			font-size: 24px;
+			text-shadow: 0 0 4px var(--bg);
+		}
+		#img.rem::before{content: '-'}
+		#img.toobig::before{content: 'too big!';color:red;font-size: 15px;}
+		#bitimg{
+			width: 64px;
+			vertical-align: middle;
+			margin-right: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div><div id="img" onclick="if(img.className){me.ws.send('icon\n');for(const g of me.guilds) if(g.ws)g.ws.send('icon\n');img.className='';me.icon='';img.style.background = 'url(../img/def'+(me.id.hashCode()&7)+'.png) center/cover';return}i.click()"></div><span id="id" title="You cannot change your username!"></span></div>
+	<canvas id="canvas" width="64" height="64" style="display:none"></canvas>
+	<p>
+		<img src="../img/bits1.gif" id="bitimg" />999 bits
+	</p>
+	<p>
+		Chit.gg (and all related services) are property of BlobKat (contact <a href="mailto:blob.kat@hotmail.com">blob.kat@hotmail.com</a>). You are accessing a private build, which means you agree to the private testing terms and conditions below
+	</p>
+	<h1>Private testing T&Cs</h1>
+	<p style="font-style:italic">
+		TL;DR No sharing without my consent. Report vulns when you find one. No token sharing. Showing screenshots is ok as long as every feature you show is at least 1 week old. Breaking rules will result in punishment to our discretion; likely a ban
+	</p>
+	<p>
+		We are offering you this free copy of our software which is not yet publicly available. By using this software, you agree to the conditions set forth. If you do not agree to one or more of these conditions, then you shall not use chit.gg (or any related services). We advise you to use your God-given common sense as we reserve the right to deny you access at any time for any reason we believe to be inappropriate use of the access you have been granted.
+	</p>
+	<p>
+		<b>1. Don't share this software with anyone unless you have prior consent.</b> Simple and straightforward. This is called a <i>private</i> beta for a reason. Breaking this rule will result in an immediate and innegociable ban from the testing circle.
+	</p>
+	<p>
+		<b>2. If you find any security vulnerabilities, you must not abuse them, rather you should immediately report them to a developer to be fixed.</b> There are going to be plenty of bugs so finding an exploit does not make you entitled in any way. Remember that reporting these kind of bugs is the main purpose of the testing circle.
+	</p>
+	<p>
+		<b>3. Don't share your or others' account credentials with anyone.</b> Every tester should have access to exactly 1 account, no more, no less. Breaking this rule will, similarly to rule 1, result in a ban from the testing circle.
+	</p>
+	<p>
+		<b>4. You may share screenshots and recordings of chit.gg with the public, with the restriction that you cannot show any features that are less than 1 week old.</b> This is so that we have time to iron out a feature before the public adopts an expectation that we later realise we cannot fulfill. As such, <b>if we decide to drop/remove a feature within a week of it being added, you will never have the right to share it with anyone outside the testing circle.</b>
+	</p>
+	<h1>Assets</h1>
+	<p>
+		All image assets with the exception of the baground images belong to BlobKat (contact info above).<br><br>
+		The 8 background images belong to Creo (<a href="mailto:contact@creo-music.com">contact@creo-music.com</a>)
+	</p>
+</body>
+<script>
+	String.prototype.hashCode = function(hash = 604537145){
+		for (let i = this.length; i--;){
+			hash ^= this.charCodeAt(i)
+			hash ^= hash << 7
+			hash ^= hash >> 5
+		}
+		return hash
+	}
+	const ctx = canvas.getContext('2d')
+	const i = document.createElement('input')
+	i.type = 'file'
+	i.accept = 'image/*'
+	i.onchange = async function(){
+		const file = i.files[0]
+		if(!file)return
+		const reader = new FileReader()
+		let p = new Promise(r => reader.onload = r)
+		reader.readAsDataURL(file)
+		const image = new Image()
+		const q = new Promise(r => image.onload = r)
+		image.src = (await p).target.result
+		await q
+		let offx = 0, offy = 0
+		if(image.width > image.height)offx = Math.floor((image.width - image.height) * 32 / image.height)
+		else if(image.height > image.width)offy = Math.floor((image.height - image.width) * 32 / image.width)
+		ctx.clearRect(0,0,64,64)
+		ctx.imageSmoothingEnabled = Math.min(image.width, image.height) >= 64
+		ctx.drawImage(image, -offx, -offy, offx * 2 + 64, offy * 2 + 64)
+		//todo: packet
+		const icon = canvas.toDataURL('image/webp')
+		if(icon.length > 10000)return img.className = 'toobig', setTimeout(()=>img.className='', 2000)
+		img.style.background = `url(${me.icon = icon})`
+		me.ws.send('icon\n'+icon)
+		for(const g of me.guilds) if(g.ws)g.ws.send('icon\n'+icon)
+		img.className = 'rem'
+	}
+	function loaded(){
+		img.style.background = me.icon ? `url(${me.icon})` : `url(../img/def${(me.id.hashCode()&7)}.png) center/cover`
+		img.className = me.icon ? 'rem' : ''
+		id.textContent = me.id
+		displaybits()
+	}
+	function themechange(){
+		id.style.color = (me.dark ? ['#fec', '#fce', '#efc', '#cef', '#ecf', '#cee', '#eec', '#ccc'] : ['#630', '#603', '#360', '#036', '#306', '#033', '#330', '#333'])[me.id.hashCode() & 7]
+	}
+	function displaybits(){
+		bitimg.nextSibling.textContent = me.bits + ' bits'
+		bitimg.src = `../img/bits${(me.bits < 4 ? 1 : me.bits < 15 ? 2 : me.bits < 50 ? 3 : me.bits < 160 ? 4 : 5)}.gif`
+	}
+</script>
