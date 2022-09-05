@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import {promises as fs} from "fs"
 const sodium = await s.SodiumPlus.auto()
 const key = await sodium.crypto_box_keypair()
-key.buffer.set(await fs.readFile('key'))
+key.buffer.set(await fs.readFile('../../key'))
 const sec = await sodium.crypto_box_secretkey(key)
 const pub = await sodium.crypto_box_publickey(key)
 const nonce = Buffer.from('YOcKVAiq2Z7GrDVJhbNlNJPn85Z7Zgio', 'base64')
