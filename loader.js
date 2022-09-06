@@ -114,7 +114,7 @@ export function load(guild, cb){
 		crc <<= 4
 	}
 	if(guild.ws && me.current == guild)me.current = me.cur
-	guild.ws = new WebSocket(`ws://${node}/${encodeURIComponent(guild.id)}/${encodeURIComponent(localStorage.token)}/${dat || encodeURIComponent(JSON.stringify(me))}`)
+	guild.ws = new WebSocket(`wss://${node}/${encodeURIComponent(guild.id)}/${encodeURIComponent(localStorage.token)}/${dat || encodeURIComponent(JSON.stringify(me))}`)
 	let opened = false
 	guild.ws.onmessage = function({data}){
 		if(!opened){
