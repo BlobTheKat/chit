@@ -45,7 +45,7 @@ function auth(){
 		}
 	}
 	ws.onclose=e=>{
-		if(!localStorage.token)return localStorage.err='No such user',location = '/acc/#login'
+		if(localStorage.token == '.')return localStorage.err='No such user',location = '/acc/#login'
 		if(e.code == 1005)localStorage.authip = localStorage.id = localStorage.token = ''
 		location=opened?'':'/crash.html?'+encodeURIComponent('Could not connect to auth server ('+e.code+')')
 	}
@@ -84,7 +84,7 @@ const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missi
 	const crc = crc32(s.id)
 	if(s.aver == aver && s.authip)auth();else fetch('authservers.txt').then(a=>a.text()).then(a=>{
 		let ip = null
-		for(let t of a.split('\n')){
+		for(let t of a.trim().split('\n')){
 			let [h,a] = t.trim().split(' ')
 			;[t,h] = h.split('/');t=parseInt(t, 16)
 			if((crc >>> 32-h) == (t >>> 32-h)){ip = a;break}
@@ -95,7 +95,7 @@ const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missi
 		auth()
 	}).catch(missingfilecrash)
 	if(s.gver == gver && s.guildnodes)loadguilds();else fetch('guildservers.txt').then(a=>a.text()).then(a=>{
-		s.guildnodes = a
+		s.guildnodes = a.trim()
 		loadguilds()
 	}).catch(missingfilecrash)
 })(localStorage,{aver:'2',gver:'2'})
