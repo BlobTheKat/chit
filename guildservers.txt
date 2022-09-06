@@ -1,2 +1,2 @@
-00000000/1 incipio.local:83
-80000000/1 incipio.local:84
+00000000/1 orion.chit.cf:443
+80000000/1 coco.chit.cf:443
