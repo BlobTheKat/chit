@@ -23,7 +23,7 @@ if(localStorage.token == undefined || !localStorage.id)location = '/acc/#signup'
 function auth(){
 	if(localStorage.token == undefined || !localStorage.id)return
 	const ip = localStorage.authip
-	const ws = loaded.ws = new WebSocket(`ws://${ip}/${encodeURIComponent(localStorage.id)}/${encodeURIComponent(localStorage.token)}/auth`)
+	const ws = loaded.ws = new WebSocket(`wss://${ip}/${encodeURIComponent(localStorage.id)}/${encodeURIComponent(localStorage.token)}/auth`)
 	let opened = false
 	ws.onmessage=({data})=>{
 		if(typeof data != 'string')return
