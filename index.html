@@ -8,32 +8,44 @@
 <head>
 	<meta charset="UTF-8">
 	<noscript><meta http-equiv="refresh" content="0; URL=/crash.html" /></noscript>
-	<link id="pload" rel="preload" as="script" href="./lib.js" crossorigin="anonymous">
+	<!--link id="pload" rel="preload" as="script" href="./lib.js" crossorigin="anonymous"-->
 	<link id="fav" rel="icon" href="./img/iconwhite.png">
-	<script>const loaded=()=>(--loaded.l||loaded.cb());loaded.l=2;loaded.cb=()=>{};{
+	<script>
+let askemail = null
+const loaded=()=>(--loaded.l||loaded.cb());loaded.l=2;loaded.cb=()=>{};{
 const nullarr = () => [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
 //implement rangetable
 loaded.root = nullarr()
 loaded.ws = null
 loaded.dat = null
 localStorage.err = ''
-if(!localStorage.token)location = '/signup'
+if(localStorage.token == undefined || !localStorage.id)location = '/acc/#signup'
 function auth(){
-	if(!localStorage.token)return
+	if(localStorage.token == undefined || !localStorage.id)return
 	const ip = localStorage.authip
 	const ws = loaded.ws = new WebSocket(`ws://${ip}/${encodeURIComponent(localStorage.id)}/${encodeURIComponent(localStorage.token)}/auth`)
 	let opened = false
 	ws.onmessage=({data})=>{
 		if(typeof data != 'string')return
 		if(!opened){
+			if(askemail){
+				if(data[0] == '.')console.log(localStorage.token = data.slice(1)),ws.onclose=null,location+=''
+				else if(data)err.textContent = data
+				else hint.firstChild.textContent = 'If the email was valid,\nyou will have received a code.\nEnter the code below:',hint.children[0].placeholder = 'code-here', hint.children[0].value = '', err.textContent = ''
+				return
+			}else if(data[0] == '.'){askemail = function(){
+				app.children[3].style.background = 'none'
+				app.insertAdjacentHTML('beforeend', `<div id="hint" style="text-align:center;white-space:pre-wrap;position:fixed;top:0;left:0;bottom:0;right:0;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:100;font-size:min(6vw,25px)">Enter your email:<input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border-bottom: 2px white solid" placeholder="${data.slice(1) || 'abc@example.com'}" oninput="if(this.placeholder!='code-here')return;if(this.value.length==4)this.value+='-';if(this.value.endsWith('--'))this.value=this.value.slice(0,-1);if(this.value.length>9)this.value=this.value.slice(0,9)" onchange="me.ws.send((this.placeholder=='code-here'?'':'.')+this.value);err.textContent=''" /><div id="err" style="font-size:20px;color:red"></div></div>`)
+				me.ws = ws
+			};if(globalThis.me)askemail();return}
 			loaded.dat = JSON.parse(data)
-			if(typeof loaded.dat == 'string')localStorage.err = loaded.dat,location='/signup',ws.onclose=null
+			if(typeof loaded.dat == 'string')localStorage.err = loaded.dat,location='/acc/#signup',ws.onclose=null
 			loaded()
 			return opened = true
 		}
 	}
 	ws.onclose=e=>{
-		if(e.code == 1006)localStorage.authip = localStorage.id = localStorage.token = ''
+		if(e.code == 1005)localStorage.authip = localStorage.id = localStorage.token = ''
 		location=opened?'':'/crash.html?'+encodeURIComponent('Could not connect to auth server ('+e.code+')')
 	}
 }
@@ -68,7 +80,7 @@ function crc32(str){
 }
 const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missing critical file');
 ((s,{aver, gver}) => {
-	const crc = crc32(s.id || (s.id = '@blobkat'))
+	const crc = crc32(s.id)
 	if(s.aver == aver && s.authip)auth();else fetch('authservers.txt').then(a=>a.text()).then(a=>{
 		let ip = null
 		for(let t of a.split('\n')){
@@ -90,8 +102,8 @@ const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missi
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
+		*{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;box-sizing:border-box;touch-action:pan-x pan-y;overflow:visible;min-width:0}
 		.down,.left,.up,.right{display:flex}
-		div{position:relative}
 		.down{ flex-direction: column }
 		.left{ flex-direction: row-reverse }
 		.up{ flex-direction: column-reverse }
@@ -108,7 +120,7 @@ const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missi
 		img{flex-shrink: 0;}
 		span{white-space: pre;text-overflow: ellipsis;overflow: hidden;}
 		sel{user-select: text}
-		input,textarea{background: unset;color:unset;border:unset;outline:unset;resize:none;font:unset;padding:unset}
+		input,textarea{border-radius:unset;background:unset;color:unset;border:unset;outline:unset;resize:none;font:unset;padding:unset}
 		::placeholder{color:inherit;opacity: 0.4}
 		p{margin:unset;white-space: pre-wrap;}
 		::-webkit-scrollbar-thumb, ::scrollbar-thumb{background:#0008;border-radius:20px;position: absolute;background-clip: content-box;border: 2px transparent solid;width:10px}
@@ -116,8 +128,9 @@ const missingfilecrash = () => location='/crash.html?'+encodeURIComponent('Missi
 		::selection{background:var(--col2);}
 		iframe{border:none}
 		input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-	input[type=number]{-moz-appearance: textfield}
-	</style><style>*{box-sizing: border-box;touch-action: none;overflow: visible;min-width: 0}.up > *, .down > *{flex-shrink: 0}</style>
+		input[type=number]{-moz-appearance: textfield}
+		.up > *, .down > *{flex-shrink: 0}
+	</style><style>div{position:relative}</style>
 </head>
 <body>
 	<script src="lib.js" type="module"></script>

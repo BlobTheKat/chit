@@ -353,10 +353,10 @@ function hev(e){
 }
 document.addEventListener('click', hev)
 //todo: more events including gesture events
-document.addEventListener('dragstart', e => e.preventDefault())
+document.addEventListener('dragstart', e => console.log(e.preventDefault()))
 document.addEventListener('touchend', function(e){
+	if(!e.cancelable)return
 	e.preventDefault()
-	//manually dispatch click
 	e.target.dispatchEvent(new MouseEvent('click', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY, bubbles: true}))
 	e.target.focus()
 })
@@ -366,7 +366,7 @@ document.addEventListener('mousewheel', function(e){
 document.addEventListener('contextmenu', e => e.preventDefault())
 document.render = function(a){
 	if(a)a.id = 'app'
-	if(true || chrome || edge){
+	if(chrome || edge){
 		document.body.innerHTML = ''
 		document.body.append(a)
 	}else document.body.replaceWith(a)

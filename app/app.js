@@ -1,6 +1,4 @@
-import { Channel } from "../state/channel.js"
 import { LVLS } from "../state/guild.js"
-import { Donation } from "../state/me.js"
 import { askfile, fileToFixedImg } from "./img.js"
 
 function formatTime(a){
@@ -19,9 +17,11 @@ font('ubuntu', './img/Ubuntu-Bold.ttf')
 font('ubuntu-thin', './img/Ubuntu-Regular.ttf')
 const istyle = document.createElement('style')
 istyle.innerHTML = `
+body,html{height:100%}
+@font-face{font-family:ubuntu;src:url('../img/Ubuntu-Bold.ttf')}
+@font-face{font-family:ubuntu-thin;src:url('../img/Ubuntu-Regular.ttf')}
 body{font-family:ubuntu;color:var(--col);user-select:none;-webkit-user-select:none}
-*{padding:0;margin:0;box-sizing:border-box;touch-action:none}
-`
+${document.styleSheets[0].cssRules[0].cssText}`
 const COLS = ['#E25', '#5E2', '#25E', '#52E']
 const COLORS = ['#888', '', '#52E', '#5E2', '#E52', '#E52', '#FC0']
 const TINTED_DARK = Object.fromEntries(['#fec', '#fce', '#efc', '#cef', '#ecf', '#cee', '#eec', '#ccc'].map((a,i)=>['--tint'+i,a]))
@@ -198,13 +198,14 @@ export const App = Box({font: 'ubuntu', bg: '--bg', col: '--col'},
 			let w = el.contentWindow
 			if(!w)return
 			el.style.opacity = 1
-			for(let f of document.fonts)w.document.fonts.add(f)
 			w.document.body.style.setProperty('--col', me.dark ? '#fff' : '#000')
 			w.document.body.style.setProperty('--bg', me.dark ? '#000' : '#fff')
+			istyle.remove()
 			w.document.head.insertAdjacentElement('afterbegin', istyle)
 			w.send = (m, d) => ch.guild.ws.send(`g\n${ch.id} ${m}\n${d}`)
 			w.me = me
-			w.ontouchend = e => {e.preventDefault();e.target.dispatchEvent(new w.MouseEvent('click', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY, bubbles: true}));e.target.focus()}
+			w.channel = me.current.current
+			w.ontouchend = e => {if(e.cancelable){e.preventDefault();e.target.dispatchEvent(new w.MouseEvent('click', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY, bubbles: true}));e.target.focus()}}
 			w.document.ondragstart = e => e.preventDefault()
 			w.document.addEventListener('mousewheel', e => e.ctrlKey && e.preventDefault(), {passive: false})
 			w.loaded && w.loaded()

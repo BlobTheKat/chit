@@ -40,13 +40,13 @@ server.on('connection', async (ws, {url}) => {
 		[guild, token, dat] = url.slice(1).split('/').map(decodeURIComponent)
 		dat = JSON.parse(dat)
 	}catch(e){return ws.close()}
-	if(!await messages.verify(dat.id, token))return ws.close()
+	if(typeof dat.id != 'string' || typeof dat.icon != 'string' || typeof dat.signature != 'string')return ws.close()
+	ws.id = dat.id
+	if(!await messages.verify(ws.id, token))return ws.close()
 	if(!(guild = guilds.get(guild)))return ws.send(''),ws.close()
 	ws.guild = guild
-	ws.id = dat.id
-	ws.member = guild.members.get(dat.id) || new Member({id: dat.id, icon: '', perms: -1})
+	ws.member = guild.members.get(ws.id) || new Member({id: ws.id, icon: '', perms: -1})
 	ws.member.icon = dat.icon
-	ws.member.id = dat.id
 	ws.member.ws.add(ws)
 	guild._.me = ws.member
 	ws.mirrors = new Set
@@ -82,7 +82,7 @@ function save(i){
 }
 setInterval(() => {
 	NOW = Math.floor(Date.now() / 1000 - 16e8)
-	if(NOW - lastSave > 360){
+	if(NOW - lastSave > 3600){
 		//save all guilds
 		lastSave = NOW
 		save(guilds.values())

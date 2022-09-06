@@ -130,7 +130,7 @@
 		id.style.color = (me.dark ? ['#fec', '#fce', '#efc', '#cef', '#ecf', '#cee', '#eec', '#ccc'] : ['#630', '#603', '#360', '#036', '#306', '#033', '#330', '#333'])[me.id.hashCode() & 7]
 	}
 	function displaybits(){
-		bitimg.nextSibling.textContent = me.bits + ' bits'
+		bitimg.nextSibling.textContent = me.bits == 1 ? '1 bit' : me.bits + ' bits'
 		bitimg.src = `../img/bits${(me.bits < 4 ? 1 : me.bits < 15 ? 2 : me.bits < 50 ? 3 : me.bits < 160 ? 4 : 5)}.gif`
 	}
 </script>

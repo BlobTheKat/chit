@@ -53,6 +53,9 @@ export const Me = Type(class{
 		if(a)onhashchange(false)
 		else if(o)location.reload()
 	}
+	toJSON(){
+		return {icon: this.icon, signature: '', bits: me.bits, id: me.id}
+	}
 })
 
 Object.defineProperties(globalThis, {

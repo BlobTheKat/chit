@@ -10,7 +10,7 @@ loaded.dat.id = me.id = localStorage.id
 me.icon = loaded.dat.icon
 me.bits = loaded.dat.bits
 localStorage.token = loaded.dat.token || localStorage.token
-const dat = encodeURIComponent(JSON.stringify(loaded.dat))
+let dat = encodeURIComponent(JSON.stringify(loaded.dat))
 me.ws.onmessage = function({data}){
 	const i = data.indexOf('\n') + 1 || data.length + 1
 	const code = data.slice(0, i - 1)
@@ -113,7 +113,7 @@ export function load(guild, cb){
 		crc <<= 4
 	}
 	if(guild.ws && me.current == guild)me.current = me.cur
-	guild.ws = new WebSocket(`ws://${node}/${encodeURIComponent(guild.id)}/${encodeURIComponent(localStorage.token)}/${dat}`)
+	guild.ws = new WebSocket(`ws://${node}/${encodeURIComponent(guild.id)}/${encodeURIComponent(localStorage.token)}/${dat || encodeURIComponent(JSON.stringify(me))}`)
 	let opened = false
 	guild.ws.onmessage = function({data}){
 		if(!opened){
@@ -160,3 +160,4 @@ globalThis.join = i => new Promise(r => {
 if(loaded.l)await new Promise(r=>loaded.cb=r)
 await document.fonts.ready
 me.loaded = true
+dat = ''
