@@ -1,2 +1,2 @@
-00000000/1 incipio.local:81
-80000000/1 incipio.local:82
+00000000/1 me1.chit.cf:443
+80000000/1 me2.chit.cf:443
