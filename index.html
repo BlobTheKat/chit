@@ -45,7 +45,7 @@ function auth(){
 		}
 	}
 	ws.onclose=e=>{
-		if(localStorage.token == '/')return localStorage.err='No such user',location = '/acc/#login'
+		if(localStorage.token == '@')return localStorage.err='No such user',location = '/acc/#login'
 		if(e.code == 1005)localStorage.authip = localStorage.id = localStorage.token = ''
 		location=opened?'':'/crash.html?'+encodeURIComponent('Could not connect to auth server ('+e.code+')')
 	}
