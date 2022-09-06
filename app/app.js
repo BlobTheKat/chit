@@ -139,7 +139,7 @@ export const App = Box({font: 'ubuntu', bg: '--bg', col: '--col'},
 				)
 			),
 			Spacer(12),
-
+			Text({size:15,marginLeft:20,opacity:0.7}).changed('membercount', ({membercount}, el) => (el.style.display = membercount ? 'block' : 'none', el.text = membercount == 1 ? '1 member' : membercount + ' members')),
 			Box({h:30},
 				Text({t:0,l:20,size:14}, 'Level 1').changed('level', ({level}, e) => e.text = level ? level == 9 ? 'MAX LEVEL' : 'Level '+level : 'Chit v0.3'),
 				Text({t:0,r:20,size:14}, '').changed('level bits', ({level, bits}, e) => e.text = level ? level == 9 ? '' : (LVLS.guild[level] - bits) + ' to level '+(level+1) : ''),

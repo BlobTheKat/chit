@@ -66,6 +66,7 @@ function msg(d){
 	if(this.member.perms == -1 && !code.startsWith('focus')){
 		this.member.perms = 1
 		this.guild.members.push(this.member)
+		this.guild.membercount++
 	}else if(this.member.perms < -1 && NOW + this.member.perms > 0)this.member.perms = 0
 	if(code == 'verify')return
 	if(messages[code])messages[code].call(this, this, data)

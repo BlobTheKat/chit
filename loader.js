@@ -85,13 +85,14 @@ addType(Guild, 'g', {
 	newchannel: Boolean,
 	channels: [Channel],
 	me: Member,
+	membercount: Number,
 })
 addType(Channel, 'c', {
 	id: String,
 	type: String,
 	level: Number,
 	bits: Number,
-	messages: [Message]
+	messages: [Message],
 })
 addType(Message, 'm', {
 	id: String,
@@ -103,7 +104,7 @@ addType(Member, 'M', {
 	icon: String,
 	perms: Number,
 	lastsign: Number,
-	perk: Number
+	perk: Number,
 })
 export function load(guild, cb){
 	let crc = crc32(guild.id)

@@ -18,6 +18,7 @@ export const Guild = Type(class{
 	upgrading = 3
 	newchannel = false
 	bucket = new Map
+	membercount = 0
 	set_me(a, o){
 		if(o)o.mg = null
 		a.mg = this

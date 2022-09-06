@@ -38,6 +38,7 @@ export const Guild = Type({
 	bits: 0,
 	level: 1,
 	upgrading: 0,
+	membercount: 0,
 	focus: new MirrorGroup({
 		name: String,
 		icon: String,
@@ -53,7 +54,8 @@ export const Guild = Type({
 		bits: Number,
 		level: Number,
 		upgrading: Number,
-		newchannel: Boolean
+		newchannel: Boolean,
+		membercount: Number
 	}),
 })
 addType(Channel, 'c', {
@@ -70,6 +72,7 @@ addType(Guild, 'g', {
 	level: Number,
 	upgrading: Number,
 	newchannel: Boolean,
+	membercount: Number,
 	channels: [Channel],
 	members: [Member]
 })

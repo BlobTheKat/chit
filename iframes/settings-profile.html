@@ -47,6 +47,22 @@
 			vertical-align: middle;
 			margin-right: 20px;
 		}
+		[collapser]{margin-bottom: 0}
+		[collapser]::before{
+			content: '▶';
+			opacity: 0.8;
+			font-size: 0.6em;
+			width: 1.5em;
+			display: inline-block;
+			vertical-align: middle;
+			cursor: pointer;
+		}
+		[collapser].expanded::before{ content: '▼' }
+		[collapser] + div{ display: none }
+		[collapser].expanded + div{ display: block }
+		[collapser].expanded + div:after { margin-top: 20px; content: ''; width: 100%; display: block; border: 1px #888 solid }
+		a{ color:#88f }
+		.light a{ color: #008 }
 	</style>
 </head>
 <body>
@@ -56,10 +72,10 @@
 		<img src="../img/bits1.gif" id="bitimg" />999 bits
 	</p>
 	<p>
-		Chit.gg (and all related services) are property of BlobKat (contact <a href="mailto:blob.kat@hotmail.com">blob.kat@hotmail.com</a>). You are accessing a private build, which means you agree to the private testing terms and conditions below
+		Chit.gg (and all related services) are property of BlobKat (contact <a href="mailto:blob.kat@hotmail.com">blob.kat@hotmail.com</a>). You are accessing a private build, which means you agree to the private testing T&Cs, as well as the user TOS, all expandable below
 	</p>
-	<h1>Private testing T&Cs</h1>
-	<p style="font-style:italic">
+	<h1 collapser>Private testing T&Cs</h1>
+	<div><p style="font-style:italic">
 		TL;DR No sharing without my consent. Report vulns when you find one. No token sharing. Showing screenshots is ok as long as every feature you show is at least 1 week old. Breaking rules will result in punishment to our discretion; likely a ban
 	</p>
 	<p>
@@ -76,14 +92,30 @@
 	</p>
 	<p>
 		<b>4. You may share screenshots and recordings of chit.gg with the public, with the restriction that you cannot show any features that are less than 1 week old.</b> This is so that we have time to iron out a feature before the public adopts an expectation that we later realise we cannot fulfill. As such, <b>if we decide to drop/remove a feature within a week of it being added, you will never have the right to share it with anyone outside the testing circle.</b>
-	</p>
+	</p></div>
+	<h1 collapser>User TOS</h1>
+	<div>
+		<p>
+			TL;DR,<br>
+			1. <b>Your account safety is your responsibility</b><br>
+			2. <b>Moderation and safety in your servers is your responsibility</b><br>
+			3. <b>Respect your local laws and report a user to them if and when needed</b><br>
+			4. <b>Disputes within chit are also your responsibility. If a dispute regards what may be illegal, you should let your local authorities handle it if appropriate</b><br>
+			5. <b>Bits may only be obtained from the chit app (no 3rd party selling / buying)</b><br>
+			6. <b>Security vulnerabilities within chit (client or server) must be forwarded to a developer and not be abused, or you will run high risk of being banned from chit</b>
+		</p>
+		Full-length TOS coming soon when i can be bothered
+	</div>
 	<h1>Assets</h1>
-	<p>
-		All image assets with the exception of the baground images belong to BlobKat (contact info above).<br><br>
-		The 8 background images belong to Creo (<a href="mailto:contact@creo-music.com">contact@creo-music.com</a>)
-	</p>
+	<div>
+		Background images 3-10 belong to creo (<a href="mailto:contact@creo-music.com">contact@creo-music.com</a>)<br><br>
+		Bits animations belong to <em>Twitch Interactive, Inc.</em><br><br>
+		All other assets belong to Chit
+	</div><br>
 </body>
 <script>
+	function oc(){this.classList.toggle('expanded')}
+	document.querySelectorAll('[collapser]').forEach(a=>a.onclick=oc)
 	String.prototype.hashCode = function(hash = 604537145){
 		for (let i = this.length; i--;){
 			hash ^= this.charCodeAt(i)
@@ -127,6 +159,7 @@
 		displaybits()
 	}
 	function themechange(){
+		document.body.classList[me.dark ? 'remove' : 'add']('light')
 		id.style.color = (me.dark ? ['#fec', '#fce', '#efc', '#cef', '#ecf', '#cee', '#eec', '#ccc'] : ['#630', '#603', '#360', '#036', '#306', '#033', '#330', '#333'])[me.id.hashCode() & 7]
 	}
 	function displaybits(){
