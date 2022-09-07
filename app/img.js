@@ -25,5 +25,11 @@ export async function fileToFixedImg(file, w = 64, h = w){
 	ctx.imageSmoothingEnabled = Math.min(image.width / w, image.height / h) >= 1
 	ctx.drawImage(image, -offx, -offy, offx * 2 + w, offy * 2 + h)
 	//todo: packet
-	return canvas.toDataURL('image/webp')
+	let icon = '', quality = 0.95
+	do{
+		icon = canvas.toDataURL('image/webp', quality)
+		quality -= 0.1
+	}while(icon.length > 10000 && quality > 0)
+	if(icon.length > 10000)return
+	return icon
 }

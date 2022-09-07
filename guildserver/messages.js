@@ -4,11 +4,11 @@ import fetch from 'node-fetch'
 import {promises as fs} from "fs"
 const sodium = await s.SodiumPlus.auto()
 const key = await sodium.crypto_box_keypair()
-key.buffer.set(await fs.readFile('../../key'))
+key.buffer.set(Buffer.from(process.env.key, 'base64'))
 const sec = await sodium.crypto_box_secretkey(key)
 const pub = await sodium.crypto_box_publickey(key)
 const nonce = Buffer.from('YOcKVAiq2Z7GrDVJhbNlNJPn85Z7Zgio', 'base64')
-const LVLS = await fetch('http://incipio.local/chstats.json').then(a=>a.json())
+const LVLS = await fetch('https://chit.cf/chstats.json').then(a=>a.json())
 export const verify = async (id, token) => {
 	const [nonce, buf] = token.split1('.')
 	try{return (await sodium.crypto_box_open(Buffer.from(buf, 'base64'), Buffer.from(nonce, 'base64'), sec, pub)) == id}catch(e){return false}

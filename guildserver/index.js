@@ -7,7 +7,7 @@ import * as messages from './messages.js'
 import "./guild.js"
 import { Member } from './guild.js'
 let hash = -1, mask = 0
-for(const l of (await fetch('http://incipio.local/guildservers.txt').then(a=>a.text())).split('\n')){
+for(const l of (await fetch('https://chit.cf/guildservers.txt').then(a=>a.text())).split('\n')){
 	if(l.split(' ')[1] == process.argv[2]){
 		const [a, b] = l.split(' ',1)[0].split('/')
 		mask = 32 - b; hash = parseInt(a, 16) >>> mask
@@ -30,7 +30,6 @@ for(const k of await fs.readdir('./guilds')){
 		for(let i of a.toString().split('\n\n'))g = parse(i)
 		g.id = k
 		guilds.set(k,g)
-		globalThis.g = guilds.get('#chitdev')
 	})
 }
 const clear = '\x1b[3J\x1bc'
@@ -38,7 +37,7 @@ server.on('connection', async (ws, {url}) => {
 	let dat, guild, token
 	try{
 		[guild, token, dat] = url.slice(1).split('/').map(decodeURIComponent)
-		dat = JSON.parse(dat)
+		dat = JSON.parse(Buffer.from(dat,'base64').toString())
 	}catch(e){return ws.close()}
 	if(typeof dat.id != 'string' || typeof dat.icon != 'string' || typeof dat.signature != 'string')return ws.close()
 	ws.id = dat.id

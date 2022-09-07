@@ -7,7 +7,7 @@ import nodemailer from "nodemailer"
 import { words } from './words.js'
 for(let i = 0; i < 256; i++)exists('./users/'+i, a=>a||fs.mkdir('./users/'+i))
 let hash = -1, mask = 0
-for(const l of (await fetch('http://localhost/authservers.txt').then(a=>a.text())).split('\n')){
+for(const l of (await fetch('https://chit.cf/authservers.txt').then(a=>a.text())).split('\n')){
 	if(l.split(' ')[1] == process.argv[2]){
 		const [a, b] = l.split(' ',1)[0].split('/')
 		mask = 32 - b; hash = parseInt(a, 16) >>> mask
@@ -34,7 +34,7 @@ server.on('connection', async (ws, {url}) => {
 		const crc = crc32(user)
 		if(crc >>> mask != hash || !user_regex.test(user))return ws.send('"Invalid username!"'),ws.close()
 		ws.id = user
-		if(!token){
+		if(token == '/'){
 			const {email} = await (conns.get(user) || fs.readFile(`./users/${crc&0xff}/${user}`).then(json))
 			ws.email = email
 			ws.code = ''
@@ -47,9 +47,9 @@ server.on('connection', async (ws, {url}) => {
 				if((await fs.readFile(`./users/${crc&0xff}/${user}`)).toString()!=token){
 					ws.send('"Username taken"');return ws.close()
 				}
-				if(await (await fetch('http://localhost:78/' + encodeURIComponent(token))).text() == 'false')return ws.send('"Invalid invite code"'),ws.close()
+				if(await (await fetch('https://invites.chit.cf/' + encodeURIComponent(token))).text() == 'false')return ws.send('"Invalid invite code"'),ws.close()
 			}catch{
-				if(await (await fetch('http://localhost:78/' + encodeURIComponent(token))).text() == 'false')return ws.send('"Invalid invite code"'),ws.close()
+				if(await (await fetch('https://invites.chit.cf/' + encodeURIComponent(token))).text() == 'false')return ws.send('"Invalid invite code"'),ws.close()
 				await fs.writeFile(`./users/${crc&0xff}/${user}`, token)
 			}
 			ws.send('.')
@@ -135,13 +135,13 @@ async function msg2(d){d = d.toString()
 		const r = Math.floor(Math.random() * 1000000)
 		this.code = words[r % 1000] + '-' + words[Math.floor(r / 1000)]
 		this.email = d
-		mail(d, "Email verification", "<style>body *{width:100%;text-align:center}@font-face{font-family:a;src:url(https://fonts.gstatic.com/s/ubuntu/v20/4iCv6KVjbNBYlgoCjC3jsGyNPYZvgw.woff2)}body{padding:max(50px, calc(50vh - 120px)) 0;margin:0;background:linear-gradient(#0006,#0006), url(http://incipio.local/img/creo"+(r%8)+".png) center/cover;color:#fff;font-family:a;font-size:20px;text-shadow:0 0 5px #0006;text-align:center}</style><h2>Finish signing up</h2>If this wasn't you, you can safely ignore this email.<br><br>Otherwise, your code is<div style='white-space:pre-wrap;font-size:1.2em;width:100%;backdrop-filter:blur(10px);margin-top:30px;padding:10px;background:#0001'>"+this.code+"</div>").then(a => console.log(nodemailer.getTestMessageUrl(a)))
+		mail(d, "Email verification", "<style>body *{width:100%;text-align:center}@font-face{font-family:a;src:url(https://fonts.gstatic.com/s/ubuntu/v20/4iCv6KVjbNBYlgoCjC3jsGyNPYZvgw.woff2)}body{padding:max(50px, calc(50vh - 120px)) 0;margin:0;background:linear-gradient(#0006,#0006), url(https://chit.cf/img/creo"+(r%8)+".png) center/cover;color:#fff;font-family:a;font-size:20px;text-shadow:0 0 5px #0006;text-align:center}</style><h2>Finish signing up</h2>If this wasn't you, you can safely ignore this email.<br><br>Otherwise, your code is<div style='white-space:pre-wrap;font-size:1.2em;width:100%;backdrop-filter:blur(10px);margin-top:30px;padding:10px;background:#0001'>"+this.code+"</div>").then(a => console.log(nodemailer.getTestMessageUrl(a)))
 		this.send('')
 	}else if(this.code){
 		if(d == this.code && d.length > 5){
 			//accept account with ws.email
 			if(this.token){
-				const res = await (await fetch('http://localhost:78/' + encodeURIComponent(this.token))).text()
+				const res = await (await fetch('https://invites.chit.cf/' + encodeURIComponent(this.token))).text()
 				if(res == 'false')return ws.send('"Invite code has been used"'),ws.close()
 				await fs.writeFile(`./users/${crc32(this.id)&0xff}/${this.id}`, `{"bits":3,"email":${JSON.stringify(this.email)},"lastsign":0,"signature":"","icon":"","guilds":[]}`)
 			}

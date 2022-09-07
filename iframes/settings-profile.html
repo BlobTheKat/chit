@@ -144,9 +144,11 @@
 		ctx.clearRect(0,0,64,64)
 		ctx.imageSmoothingEnabled = Math.min(image.width, image.height) >= 64
 		ctx.drawImage(image, -offx, -offy, offx * 2 + 64, offy * 2 + 64)
-		//todo: packet
-		const icon = canvas.toDataURL('image/webp')
-		alert(icon.length)
+		let icon = '', quality = 0.95
+		do{
+			icon = canvas.toDataURL('image/webp', quality)
+			quality -= 0.1
+		}while(icon.length > 10000 && quality > 0)
 		if(icon.length > 10000)return img.className = 'toobig', setTimeout(()=>img.className='', 2000)
 		img.style.background = `url(${me.icon = icon})`
 		me.ws.send('icon\n'+icon)
