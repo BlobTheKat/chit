@@ -10,7 +10,7 @@ loaded.dat.id = me.id = localStorage.id
 me.icon = loaded.dat.icon
 me.bits = loaded.dat.bits
 localStorage.token = loaded.dat.token || localStorage.token
-let dat = btoa(unescape(encodeURI(JSON.stringify(loaded.dat))))
+let dat = btoa(unescape(encodeURI(JSON.stringify(loaded.dat)))).replace(/[\/\+]/g, a => a == '/' ? '_' : '-')
 me.ws.onmessage = function({data}){
 	const i = data.indexOf('\n') + 1 || data.length + 1
 	const code = data.slice(0, i - 1)
@@ -114,7 +114,7 @@ export function load(guild, cb){
 		crc <<= 4
 	}
 	if(guild.ws && me.current == guild)me.current = me.cur
-	guild.ws = new WebSocket(`wss://${node}/${encodeURIComponent(guild.id)}/${encodeURIComponent(localStorage.token)}/${dat || btoa(unescape(encodeURIComponent(JSON.stringify(me))))}`)
+	guild.ws = new WebSocket(`wss://${node}/${encodeURIComponent(guild.id)}/${encodeURIComponent(localStorage.token)}/${dat || btoa(unescape(encodeURIComponent(JSON.stringify(me)))).replace(/[\/\+]/g, a => a == '/' ? '_' : '-')}`)
 	let opened = false
 	guild.ws.onmessage = function({data}){
 		if(!opened){
