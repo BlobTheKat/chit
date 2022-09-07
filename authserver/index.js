@@ -135,7 +135,7 @@ async function msg2(d){d = d.toString()
 		const r = Math.floor(Math.random() * 1000000)
 		this.code = words[r % 1000] + '-' + words[Math.floor(r / 1000)]
 		this.email = d
-		mail(d, "Email verification", "<style>body *{width:100%;text-align:center}@font-face{font-family:a;src:url(https://fonts.gstatic.com/s/ubuntu/v20/4iCv6KVjbNBYlgoCjC3jsGyNPYZvgw.woff2)}body{padding:max(50px, calc(50vh - 120px)) 0;margin:0;background:linear-gradient(#0006,#0006), url(https://chit.cf/img/creo"+(r%8)+".png) center/cover;color:#fff;font-family:a;font-size:20px;text-shadow:0 0 5px #0006;text-align:center}</style><h2>Finish signing up</h2>If this wasn't you, you can safely ignore this email.<br><br>Otherwise, your code is<div style='white-space:pre-wrap;font-size:1.2em;width:100%;backdrop-filter:blur(10px);margin-top:30px;padding:10px;background:#0001'>"+this.code+"</div>").then(a => console.log(nodemailer.getTestMessageUrl(a)))
+		mail(d, "Email verification", "<style>body *{width:100%;text-align:center}@font-face{font-family:a;src:url(https://fonts.gstatic.com/s/ubuntu/v20/4iCv6KVjbNBYlgoCjC3jsGyNPYZvgw.woff2)}body{padding:max(50px, calc(50vh - 120px)) 0;margin:0;background:linear-gradient(#0006,#0006), url(https://chit.cf/img/creo"+(r%8)+".webp) center/cover;color:#fff;font-family:a;font-size:20px;text-shadow:0 0 5px #0006;text-align:center}</style><h2>Finish signing up</h2>If this wasn't you, you can safely ignore this email.<br><br>Otherwise, your code is<div style='white-space:pre-wrap;font-size:1.2em;width:100%;backdrop-filter:blur(10px);margin-top:30px;padding:10px;background:#0001'>"+this.code+"</div>").then(a => console.log(nodemailer.getTestMessageUrl(a)))
 		this.send('')
 	}else if(this.code){
 		if(d == this.code && d.length > 5){
