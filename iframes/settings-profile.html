@@ -145,7 +145,7 @@
 		ctx.imageSmoothingEnabled = Math.min(image.width, image.height) >= 64
 		ctx.drawImage(image, -offx, -offy, offx * 2 + 64, offy * 2 + 64)
 		//todo: packet
-		const icon = canvas.toDataURL('image/webp').replace(/[\/\+]/g, a => a == '/' ? '_' : '-')
+		const icon = canvas.toDataURL('image/webp')
 		alert(icon.length)
 		if(icon.length > 10000)return img.className = 'toobig', setTimeout(()=>img.className='', 2000)
 		img.style.background = `url(${me.icon = icon})`
