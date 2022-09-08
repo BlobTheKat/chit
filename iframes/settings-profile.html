@@ -69,7 +69,7 @@
 	<div><div id="img" onclick="if(img.className){me.ws.send('icon\n');for(const g of me.guilds) if(g.ws)g.ws.send('icon\n');img.className='';me.icon='';img.style.background = 'url(../img/def'+(me.id.hashCode()&7)+'.png) center/cover';return}i.click()"></div><span id="id" title="You cannot change your username!"></span></div>
 	<canvas id="canvas" width="64" height="64" style="display:none"></canvas>
 	<p>
-		<img src="../img/bits1.gif" id="bitimg" />999 bits
+		<img src="../img/bits1.webp" id="bitimg" />999 bits
 	</p>
 	<p>
 		Chit.gg (and all related services) are property of BlobKat (contact <a href="mailto:blob.kat@hotmail.com">blob.kat@hotmail.com</a>). You are accessing a private build, which means you agree to the private testing T&Cs, as well as the user TOS, all expandable below
@@ -167,6 +167,6 @@
 	}
 	function displaybits(){
 		bitimg.nextSibling.textContent = me.bits == 1 ? '1 bit' : me.bits + ' bits'
-		bitimg.src = `../img/bits${(me.bits < 4 ? 1 : me.bits < 15 ? 2 : me.bits < 50 ? 3 : me.bits < 160 ? 4 : 5)}.gif`
+		bitimg.src = `../img/bits${(me.bits < 4 ? 1 : me.bits < 15 ? 2 : me.bits < 50 ? 3 : me.bits < 160 ? 4 : 5)}.webp`
 	}
 </script>

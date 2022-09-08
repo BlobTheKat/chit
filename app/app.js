@@ -12,7 +12,7 @@ function formatTime(a){
 		else return Math.floor(a/86400e3)+'d'
 	}
 }
-const bitsurl = a => '../img/bits'+(a < 4 ? 1 : a < 15 ? 2 : a < 50 ? 3 : a < 160 ? 4 : 5)+'.gif'
+const bitsurl = a => '../img/bits'+(a < 4 ? 1 : a < 15 ? 2 : a < 50 ? 3 : a < 160 ? 4 : 5)+'.webp'
 font('ubuntu', './img/Ubuntu-Bold.ttf')
 font('ubuntu-thin', './img/Ubuntu-Regular.ttf')
 const istyle = document.createElement('style')
@@ -221,11 +221,11 @@ export const App = Box({font: 'ubuntu', bg: '--bg', col: '--col'},
 						const d = perk - NOW
 						if(d <= 0)return el.style.display = 'none'
 						el.style.display = ''
-						if(d <= 799502)el.src = './img/bits1.gif'
-						else if(d <= 1359546)el.src = './img/bits2.gif'
-						else if(d <= 2149815)el.src = './img/bits3.gif'
-						else if(d <= 3114567)el.src = './img/bits4.gif'
-						else el.src = './img/bits5.gif'
+						if(d <= 799502)el.src = './img/bits1.webp'
+						else if(d <= 1359546)el.src = './img/bits2.webp'
+						else if(d <= 2149815)el.src = './img/bits3.webp'
+						else if(d <= 3114567)el.src = './img/bits4.webp'
+						else el.src = './img/bits5.webp'
 					})
 				).for('author'),
 				Paragraph({font: 'ubuntu-thin'},selectable).changed('content', ({content}, el) => el.text = content)
